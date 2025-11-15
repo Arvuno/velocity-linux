@@ -1,1 +1,1 @@
-# Archig
+# Archify Linux
