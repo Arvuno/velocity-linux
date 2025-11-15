@@ -133,3 +133,6 @@ xfce4-goodies
 alacritty
 kitty
 sddm
+xfce4-terminal
+xorg-server
+xorg-xinit
