@@ -2,10 +2,10 @@ name: Build Velocity ISO
 
 on:
   push:
-    tags: ['v*']  # Build on version tags like v1.0.0
-  workflow_dispatch:  # Allow manual triggers
+    tags: ['v*']
+  workflow_dispatch:
   schedule:
-    - cron: '0 0 1 * *'  # Monthly build to get latest packages
+    - cron: '0 0 1 * *'  # Monthly build
 
 env:
   ISO_NAME: velocity-linux
@@ -13,32 +13,25 @@ env:
 jobs:
   build-iso:
     runs-on: ubuntu-latest
-    container:
-      image: archlinux:latest
     
     steps:
-    - name: Install dependencies
-      run: |
-        pacman -Syu --noconfirm
-        pacman -S --noconfirm archiso git sudo
-    
     - name: Checkout repository
       uses: actions/checkout@v4
     
-    - name: Validate archiso profile
+    - name: Build Docker image
       run: |
-        cd releng
-        # Basic validation
-        test -f profiledef.sh
-        test -f packages.x86_64
-        echo "✅ Profile structure is valid"
+        docker build -t velocity-builder .
     
-    - name: Build ISO
+    - name: Build ISO in container
       run: |
-        cd releng
-        # Build with current date in version
-        export SOURCE_DATE_EPOCH=$(date +%s)
-        mkarchiso -v .
+        docker run --privileged --rm \
+          -v "$(pwd):/build" \
+          -w /build \
+          velocity-builder \
+          /bin/bash -c "
+            cd releng &&
+            mkarchiso -v .
+          "
     
     - name: Get ISO info
       id: iso-info
@@ -54,15 +47,13 @@ jobs:
       run: |
         cd releng/out
         ISO_FILE=$(ls *.iso)
-        # Basic integrity check
         file $ISO_FILE | grep "ISO 9660"
-        # Check size is reasonable (> 500MB)
         ISO_SIZE_BYTES=$(stat -c%s "$ISO_FILE")
         if [ $ISO_SIZE_BYTES -lt 500000000 ]; then
-          echo "❌ ISO seems too small, might be broken"
+          echo "❌ ISO seems too small"
           exit 1
         fi
-        echo "✅ ISO passed basic integrity checks"
+        echo "✅ ISO integrity check passed"
     
     - name: Upload ISO artifact
       uses: actions/upload-artifact@v4
@@ -84,8 +75,7 @@ jobs:
           - Triggered by: ${{ github.event_name }}
           - ISO Size: ${{ steps.iso-info.outputs.iso_size }}
           
-          **Download & Verify:**
+          **Verification:**
           ```bash
-          # Check SHA256
           sha256sum ${{ steps.iso-info.outputs.iso_file }}
           ```
