@@ -30,7 +30,7 @@ cat > /etc/skel/Desktop/README.desktop << 'EOF'
 Version=1.0
 Type=Link
 Name=Velocity Linux Documentation
-URL=https://github.com/yourusername/velocity
+URL=https://github.com/colmehurze-tech/velocity-linux
 Icon=system-help
 EOF
 
