@@ -1,1 +1,1 @@
-# Velocity: Fast and lightweight linux distro based on arch
+# Velocity: Fast and lightweight linux distro based on arch linux
