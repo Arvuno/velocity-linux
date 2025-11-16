@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
 
-iso_name="velocity-linux-0.0.1"
+iso_name="velocity-linux"
 iso_label="VELOCITY_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
-iso_publisher="colmehurze <https://github.com/colmehurze-tech/>"
-iso_application="Velocity Linux live boot"
+iso_publisher="Velocity Linux"
+iso_application="Velocity Linux Live/Rescue CD"
 iso_version="$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y.%m.%d)"
-install_dir="arch"
+install_dir="velocity"
 buildmodes=('iso')
 bootmodes=('bios.syslinux.mbr' 'bios.syslinux.eltorito'
            'uefi-ia32.systemd-boot.esp' 'uefi-x64.systemd-boot.esp'

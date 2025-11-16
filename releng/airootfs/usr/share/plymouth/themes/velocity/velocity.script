@@ -1,0 +1,95 @@
+// Velocity Plymouth Theme - ArchCraft Style
+plymouth.set_refresh_function(refresh);
+plymouth.set_boot_progress_function(boot_progress);
+plymouth.set_root_mounted_function(root_mounted);
+
+// Screen dimensions
+Width = 1920;
+Height = 1080;
+
+// Colors
+BackgroundColor = 0x000000;    // Pure black background
+LogoColor = 0x3182ce;          // Velocity blue for logo
+ProgressBgColor = 0x2d3748;    // Dark gray for progress bar background
+ProgressFgColor = 0x3182ce;    // Velocity blue for progress bar fill
+TextColor = 0xe2e8f0;          // Light silver for text
+
+// Sprites
+var logo_sprite = null;
+var progress_bg_sprite = null;
+var progress_fg_sprite = null;
+var text_sprite = null;
+
+// Progress tracking
+var current_progress = 0;
+
+fun refresh() {
+    // Get and set window size
+    window = plymouth.get_window();
+    if (window) {
+        window.set_size(Width, Height);
+        window.set_background_color(BackgroundColor);
+    }
+    
+    // Create logo - centered at top
+    if (logo_sprite == null) {
+        logo_sprite = plymouth.create_sprite("images/velocity-logo.png");
+        logo_sprite.set_position(Width / 2, Height / 2 - 80, 10000);
+        logo_sprite.set_alignment(0.5, 0.5);
+    }
+    
+    // Create progress bar background
+    if (progress_bg_sprite == null) {
+        progress_bg_sprite = plymouth.create_rectangle();
+        progress_bg_sprite.set_size(400, 6);
+        progress_bg_sprite.set_position(Width / 2, Height / 2 + 60, 10000);
+        progress_bg_sprite.set_alignment(0.5, 0.5);
+        progress_bg_sprite.set_color(ProgressBgColor);
+    }
+    
+    // Create progress bar foreground (fill)
+    if (progress_fg_sprite == null) {
+        progress_fg_sprite = plymouth.create_rectangle();
+        progress_fg_sprite.set_size(0, 6);  // Start at 0 width
+        progress_fg_sprite.set_position((Width / 2) - 200, Height / 2 + 60, 10001); // Left-aligned
+        progress_fg_sprite.set_color(ProgressFgColor);
+    }
+    
+    // Create "Velocity Linux" text
+    //if (text_sprite == null) {
+    //    text_sprite = plymouth.create_text_sprite("Velocity Linux");
+    //   text_sprite.set_position(Width / 2, Height / 2 + 100, 10000);
+    //    text_sprite.set_alignment(0.5, 0.5);
+    //    text_sprite.set_color(TextColor);
+    // }
+}
+
+fun boot_progress(percent) {
+    // Smooth progress with easing
+    current_progress = percent;
+    
+    if (progress_fg_sprite) {
+        // Add some easing so it doesn't jump abruptly
+        var target_width = (percent / 100) * 400;
+        var current_width = progress_fg_sprite.get_width();
+        
+        // Smooth transition
+        var new_width = current_width + (target_width - current_width) * 0.3;
+        progress_fg_sprite.set_size(new_width, 6);
+        
+        // Keep it left-aligned
+        progress_fg_sprite.set_position((Width / 2) - 200, Height / 2 + 60, 10001);
+    }
+}
+
+fun root_mounted() {
+    // When root is mounted, fill progress bar to 100% if not already
+    if (progress_fg_sprite && current_progress < 100) {
+        progress_fg_sprite.set_size(400, 6);
+    }
+    
+    // Optional: Fade out elements before showing login screen
+    if (text_sprite) {
+        text_sprite.set_color(0x00000000, 500); // Fade to transparent in 500ms
+    }
+}

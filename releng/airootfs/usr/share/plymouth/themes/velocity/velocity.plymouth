@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Velocity
+Description=Plymouth boot screen
+Modulename=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/velocity
+Scriptfile=/usr/share/plymouth/themes/velocity/velocity.script

@@ -136,3 +136,13 @@ sddm
 xfce4-terminal
 xorg-server
 xorg-xinit
+plymouth
+plymouth-theme-arch-logo
+plymouth-theme-arch-breeze
+plymouth-theme-spinner
+inkscape
+xorg-xrandr
+geany
+vlc
+evince
+gnome-photos
