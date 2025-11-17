@@ -160,6 +160,6 @@ geany
 vlc
 evince
 gnome-photos
-gtk2-engine-murrine
-gtk2-engines
+gtk2
+gtk3
 gnome-themes-extra
