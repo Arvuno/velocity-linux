@@ -16,7 +16,7 @@ mkdir -p /etc/plymouth
 # Set Plymouth configuration
 cat > /etc/plymouth/plymouthd.conf << 'EOF'
 [Daemon]
-Theme=velocity
+Theme=arch-mac-style
 ShowDelay=0
 DeviceTimeout=8
 EOF
@@ -28,7 +28,7 @@ sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect modconf kms keyboard keymap cons
 echo "MODULES=(i915 amdgpu radeon nouveau)" >> /etc/mkinitcpio.conf
 
 # Set Velocity as default theme
-plymouth-set-default-theme -R velocity
+plymouth-set-default-theme -R arch-mac-style
 
 # Rebuild initramfs
 mkinitcpio -P
@@ -39,104 +39,32 @@ if [ -f /etc/default/grub ]; then
     grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
-# Set default wallpaper for XFCE4
-echo "Setting up Velocity wallpaper..."
+# Set budgie desktop themes and wallpaper
 
-# Create XFCE4 desktop configuration
-mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/
+echo "[org/gnome/desktop/background/]
+picture-uri='file:///usr/share/backgrounds/velocity/default-wallpaper.png'" > /etc/dconf/db/local.d/background
+dconf update
 
-cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
+mkdir -p /etc/dconf/db/local.d/
+cat > /etc/dconf/db/local.d/budgie-appearance << 'EOF'
+[org/gnome/desktop/interface]
+gtk-theme='Sweet-Ambar-Blue-Dark'
+icon-theme='Papirus-Dark'
+cursor-theme='ArcStarry-cursors'
 
-<channel name="xfce4-desktop" version="1.0">
-  <property name="backdrop" type="empty">
-    <property name="screen0" type="empty">
-      <property name="monitor0" type="empty">
-        <property name="image-path" type="string" value="/usr/share/backgrounds/velocity/default-wallpaper.jpg"/>
-        <property name="image-style" type="int" value="5"/>
-        <property name="last-image" type="string" value="/usr/share/backgrounds/velocity/default-wallpaper.jpg"/>
-        <property name="last-single-image" type="string" value="/usr/share/backgrounds/velocity/default-wallpaper.jpg"/>
-      </property>
-    </property>
-  </property>
-</channel>
+[org/gnome/desktop/wm/preferences]
+theme='Sweet-Ambar-Blue-Dark'
 EOF
 
-# Also set for the liveuser directly (in case skel doesn't work)
-mkdir -p /home/liveuser/.config/xfce4/xfconf/xfce-perchannel-xml/
-cp /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml /home/liveuser/.config/xfce4/xfconf/xfce-perchannel-xml/
+dconf update
 
-# Set ownership
-chown -R liveuser:liveuser /home/liveuser/.config
-
-echo "✅ Wallpaper configured for Velocity Linux"
-
-# Setup Sweet Theme (pre-downloaded)
-setup_sweet_theme() {
-    echo "Setting up Sweet theme..."
-    
-    # Ensure themes are properly installed
-    if [ -d "/usr/share/themes/Sweet" ]; then
-        echo "✅ Sweet theme found"
-    else
-        echo "❌ Sweet theme not found"
-        return 1
-    fi
-    
-    # Create XFCE4 configuration
-    mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/
-    
-    # xsettings.xml
-    cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-
-<channel name="xsettings" version="1.0">
-  <property name="Net" type="empty">
-    <property name="ThemeName" type="string" value="Sweet"/>
-    <property name="IconThemeName" type="string" value="Papirus-Dark"/>
-    <property name="CursorThemeName" type="string" value="Adwaita"/>
-  </property>
-  <property name="Xft" type="empty">
-    <property name="DPI" type="int" value="96"/>
-    <property name="Antialias" type="int" value="1"/>
-    <property name="Hinting" type="int" value="1"/>
-    <property name="HintStyle" type="string" value="hintfull"/>
-    <property name="RGBA" type="string" value="rgb"/>
-  </property>
-  <property name="Gtk" type="empty">
-    <property name="FontName" type="string" value="Noto Sans, 10"/>
-  </property>
-</channel>
-EOF
-
-    # xfwm4.xml - Window manager
-    cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-
-<channel name="xfwm4" version="1.0">
-  <property name="general" type="empty">
-    <property name="theme" type="string" value="Sweet"/>
-    <property name="title_font" type="string" value="Noto Sans Bold, 10"/>
-  </property>
-</channel>
-EOF
-
-    # Copy to liveuser
-    mkdir -p /home/liveuser/.config/xfce4/xfconf/xfce-perchannel-xml/
-    cp /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/*.xml /home/liveuser/.config/xfce4/xfconf/xfce-perchannel-xml/
-    chown -R liveuser:liveuser /home/liveuser/.config
-    
-    echo "✅ Sweet theme configured for XFCE4"
-}
-
-setup_sweet_theme
 
 # Configure SDDM for autologin
 mkdir -p /etc/sddm.conf.d/
 cat > /etc/sddm.conf.d/autologin.conf << 'EOF'
 [Autologin]
 User=liveuser
-Session=xfce
+Session=budgie-desktop
 EOF
 
 # Set up automatic login on TTY1 (fallback)
@@ -164,5 +92,6 @@ if [ -d "/etc/skel" ]; then
     chown -R liveuser:liveuser /home/liveuser
 fi
 
-# Enable SDDM
+# Enable SDDM and Network Manager
 systemctl enable sddm 
+systemctl enable NetworkManager.service
