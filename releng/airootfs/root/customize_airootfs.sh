@@ -49,7 +49,7 @@ mkdir -p /etc/dconf/db/local.d/
 cat > /etc/dconf/db/local.d/budgie-appearance << 'EOF'
 [org/gnome/desktop/interface]
 gtk-theme='Sweet-Ambar-Blue-Dark'
-icon-theme='Papirus-Dark'
+icon-theme='Chameleon-Symbolic-Dark-Icons'
 cursor-theme='ArcStarry-cursors'
 
 [org/gnome/desktop/wm/preferences]
