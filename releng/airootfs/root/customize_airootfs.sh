@@ -39,24 +39,31 @@ if [ -f /etc/default/grub ]; then
     grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
-# Set budgie desktop themes and wallpaper
+# Setting up KDE plasma
+sudo -u liveuser plasma-apply-wallpaperimage /usr/share/backgrounds/velocity/default-wallpaper.jpg
+cd /usr/share/krohnkite
+sudo -u liveuser kpackagetool6 --type KWin/Script --install .
 
-echo "[org/gnome/desktop/background/]
-picture-uri='file:///usr/share/backgrounds/velocity/default-wallpaper.png'" > /etc/dconf/db/local.d/background
-dconf update
+mkdir -p /etc/skel/.config
+cat > /etc/skel/.config/kwinrc << 'EOF'
+[Plugins]
+krohnkiteEnabled=true
 
-mkdir -p /etc/dconf/db/local.d/
-cat > /etc/dconf/db/local.d/budgie-appearance << 'EOF'
-[org/gnome/desktop/interface]
-gtk-theme='Sweet-Ambar-Blue-Dark'
-icon-theme='Chameleon-Symbolic-Dark-Icons'
-cursor-theme='ArcStarry-cursors'
-
-[org/gnome/desktop/wm/preferences]
-theme='Sweet-Ambar-Blue-Dark'
+[Script-krohnkite]
+layout=tile
 EOF
 
-dconf update
+mkdir -p /etc/skel/.config/autostart
+cat > /etc/skel/.config/autostart/krohnkite-autostart.desktop << 'EOF'
+[Desktop Entry]
+Type=Application
+Name=Krohnkite Autostart
+Exec=qdbus org.kde.KWin /KWin reconfigure
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+EOF
+
 
 
 # Configure SDDM for autologin
@@ -64,7 +71,7 @@ mkdir -p /etc/sddm.conf.d/
 cat > /etc/sddm.conf.d/autologin.conf << 'EOF'
 [Autologin]
 User=liveuser
-Session=budgie-desktop
+Session=plasma.desktop
 EOF
 
 # Set up automatic login on TTY1 (fallback)

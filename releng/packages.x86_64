@@ -128,14 +128,7 @@ xl2tpd
 zsh
 firefox
 fastfetch
-budgie-desktop
-budgie-control-center
-budgie-screensaver
-budgie-backgrounds
-gnome-session
-gnome-shell
-gnome-control-center
-gnome-keyring
+plasma-desktop
 pipewire
 pipewire-pulse
 pipewire-alsa
@@ -143,10 +136,6 @@ wireplumber
 networkmanager
 network-manager-applet
 file-roller
-gnome-calculator
-gnome-disk-utility
-gnome-terminal
-nautilus
 gedit
 alacritty
 kitty
