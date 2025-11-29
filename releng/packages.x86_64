@@ -129,7 +129,7 @@ zsh
 firefox
 fastfetch
 plasma-desktop
-plasma-wayland-session
+waybar
 pipewire
 pipewire-pulse
 pipewire-alsa
