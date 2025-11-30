@@ -69,7 +69,7 @@ jobs:
     
     - name: Test ISO integrity
       run: |
-        cd releng/out
+        cd out
         ISO_FILE=$(ls *.iso)
         file $ISO_FILE | grep "ISO 9660"
         ISO_SIZE_BYTES=$(stat -c%s "$ISO_FILE")
@@ -83,14 +83,14 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.ISO_NAME }}-${{ github.sha }}
-        path: releng/out/*.iso
+        path: out/*.iso
         retention-days: 30
     
     - name: Create GitHub Release
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: releng/out/*.iso
+        files: out/*.iso
         body: |
           Automated build of Velocity Linux
           
