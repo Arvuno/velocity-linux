@@ -19,26 +19,29 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Install archiso and setup compression
+    - name: Debug - Check repository structure
+      run: |
+        echo "=== Current directory ==="
+        pwd
+        echo "=== Listing files ==="
+        ls -la
+        echo "=== Looking for releng folder ==="
+        find . -name "profiledef.sh" -type f 2>/dev/null || echo "No profiledef.sh found"
+        find . -name "releng" -type d 2>/dev/null || echo "No releng folder found"
+        
+    - name: Install archiso
       run: |
         pacman -Syu --noconfirm archiso squashfs-tools sed
         
-        # If zstd compression fails, uncomment the line below to use gzip instead
-        # sed -i 's/_squashfscomp=.*/_squashfscomp=("gzip")/' /github/workspace/releng/profiledef.sh
-        
-        # Verify the current compression setting
-        echo "=== Current compression setting in your profiledef.sh ==="
-        grep '_squashfscomp' /github/workspace/releng/profiledef.sh
-        
     - name: Build ISO
       run: |
-        # Build directly from your repository's profile
-        mkarchiso -v /github/workspace/releng
+        # Build from current directory (adjust path as needed based on debug output)
+        mkarchiso -v ./releng
     
     - name: Get ISO info
       id: iso-info
       run: |
-        cd /github/workspace/releng/out
+        cd releng/out
         ISO_FILE=$(ls *.iso)
         ISO_SIZE=$(du -h $ISO_FILE | cut -f1)
         echo "iso_file=$ISO_FILE" >> $GITHUB_OUTPUT
@@ -47,7 +50,7 @@ jobs:
     
     - name: Test ISO integrity
       run: |
-        cd /github/workspace/releng/out
+        cd releng/out
         ISO_FILE=$(ls *.iso)
         file $ISO_FILE | grep "ISO 9660"
         ISO_SIZE_BYTES=$(stat -c%s "$ISO_FILE")
