@@ -33,7 +33,6 @@ jobs:
           -w /build \
           velocity-builder \
           /bin/bash -c "
-            sudo sed -i 's/_squashfscomp=.*/_squashfscomp=(\"zstd\")/' /usr/share/archiso/configs/releng/profiledef.sh
             cd releng &&
             mkarchiso -v .
           "
