@@ -17,6 +17,21 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Debug compression settings
+      run: |
+        docker run --rm \
+          -v "$(pwd):/workspace" \
+          archlinux:latest \
+          /bin/bash -c "
+            echo '=== Your profiledef.sh compression setting ==='
+            grep '_squashfscomp' /workspace/releng/profiledef.sh
+            echo '=== Testing available compressors ==='
+            pacman -Syu --noconfirm squashfs-tools
+            echo 'test' > /tmp/test.txt
+            mksquashfs /tmp/test.txt /tmp/test.sfs -comp zstd && echo 'zstd: WORKS' || echo 'zstd: FAILED'
+            mksquashfs /tmp/test.txt /tmp/test.sfs -comp gzip && echo 'gzip: WORKS' || echo 'gzip: FAILED'
+          "
       
     - name: Build ISO with Docker (privileged)
       run: |
@@ -29,7 +44,7 @@ jobs:
             pacman -Syu --noconfirm archiso squashfs-tools sed
             
             # If zstd compression fails, uncomment the line below to use gzip instead
-            # sed -i 's/_squashfscomp=.*/_squashfscomp=(\"gzip\")/' /workspace/releng/profiledef.sh
+            sed -i 's/_squashfscomp=.*/_squashfscomp=(\"gzip\")/' /workspace/releng/profiledef.sh
             
             # Build the ISO
             mkarchiso -v /workspace/releng
