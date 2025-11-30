@@ -18,17 +18,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Setup swap space
-    run: |
-      sudo fallocate -l 8G /swapfile
-      sudo chmod 600 /swapfile
-      sudo mkswap /swapfile
-      sudo swapon /swapfile
-      free -h
-      
     - name: Build Docker image
       run: |
         docker build -t velocity-builder .
+         sudo fallocate -l 6G /swapfile
+         sudo chmod 600 /swapfile
+         sudo mkswap /swapfile
+         sudo swapon /swapfile
     
     - name: Build ISO in container
       run: |
