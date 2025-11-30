@@ -34,7 +34,7 @@ jobs:
           velocity-builder \
           /bin/bash -c "
             cd releng &&
-            mkarchiso -v -c zstd .
+            mkarchiso -v -C zstd .
           "
     
     - name: Get ISO info
