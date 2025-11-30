@@ -13,7 +13,7 @@ bootmodes=('bios.syslinux.mbr' 'bios.syslinux.eltorito'
            'uefi-ia32.systemd-boot.eltorito' 'uefi-x64.systemd-boot.eltorito')
 arch="x86_64"
 # Set the compression type
-_squashfscomp=('zstd' '-Xcompression-level' '3')
+_squashfscomp=('gzip')
 pacman_conf="pacman.conf"
 airootfs_image_type="squashfs"
 airootfs_image_tool_options=('-comp' 'xz' '-Xbcj' 'x86' '-b' '1M' '-Xdict-size' '1M')
