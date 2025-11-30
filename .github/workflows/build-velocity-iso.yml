@@ -13,29 +13,27 @@ env:
 jobs:
   build-iso:
     runs-on: ubuntu-latest
+    container: archlinux:latest
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Build Docker image
+    - name: Install archiso and setup compression
       run: |
-        docker build -t velocity-builder .
-         sudo fallocate -l 6G /swapfile
-         sudo chmod 600 /swapfile
-         sudo mkswap /swapfile
-         sudo swapon /swapfile
-    
-    - name: Build ISO in container
+        pacman -Syu --noconfirm archiso squashfs-tools sed
+        
+        # If zstd compression fails, uncomment the line below to use gzip instead
+        # sed -i 's/_squashfscomp=.*/_squashfscomp=("gzip")/' /build/releng/profiledef.sh
+        
+        # Verify the current compression setting
+        echo "=== Current compression setting in your profiledef.sh ==="
+        grep '_squashfscomp' /build/releng/profiledef.sh
+        
+    - name: Build ISO
       run: |
-        docker run --privileged --rm \
-          -v "$(pwd):/build" \
-          -w /build \
-          velocity-builder \
-          /bin/bash -c "
-            cd releng &&
-            mkarchiso -v .
-          "
+        # Build directly from your repository's profile
+        mkarchiso -v /build/releng
     
     - name: Get ISO info
       id: iso-info
