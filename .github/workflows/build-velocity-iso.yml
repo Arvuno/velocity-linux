@@ -24,21 +24,21 @@ jobs:
         pacman -Syu --noconfirm archiso squashfs-tools sed
         
         # If zstd compression fails, uncomment the line below to use gzip instead
-        # sed -i 's/_squashfscomp=.*/_squashfscomp=("gzip")/' /build/releng/profiledef.sh
+        # sed -i 's/_squashfscomp=.*/_squashfscomp=("gzip")/' /github/workspace/releng/profiledef.sh
         
         # Verify the current compression setting
         echo "=== Current compression setting in your profiledef.sh ==="
-        grep '_squashfscomp' /build/releng/profiledef.sh
+        grep '_squashfscomp' /github/workspace/releng/profiledef.sh
         
     - name: Build ISO
       run: |
         # Build directly from your repository's profile
-        mkarchiso -v /build/releng
+        mkarchiso -v /github/workspace/releng
     
     - name: Get ISO info
       id: iso-info
       run: |
-        cd releng/out
+        cd /github/workspace/releng/out
         ISO_FILE=$(ls *.iso)
         ISO_SIZE=$(du -h $ISO_FILE | cut -f1)
         echo "iso_file=$ISO_FILE" >> $GITHUB_OUTPUT
@@ -47,7 +47,7 @@ jobs:
     
     - name: Test ISO integrity
       run: |
-        cd releng/out
+        cd /github/workspace/releng/out
         ISO_FILE=$(ls *.iso)
         file $ISO_FILE | grep "ISO 9660"
         ISO_SIZE_BYTES=$(stat -c%s "$ISO_FILE")
