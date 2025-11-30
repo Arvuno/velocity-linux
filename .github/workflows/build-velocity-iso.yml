@@ -13,30 +13,27 @@ env:
 jobs:
   build-iso:
     runs-on: ubuntu-latest
-    container: archlinux:latest
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Debug - Check repository structure
+    - name: Build ISO with Docker (privileged)
       run: |
-        echo "=== Current directory ==="
-        pwd
-        echo "=== Listing files ==="
-        ls -la
-        echo "=== Looking for releng folder ==="
-        find . -name "profiledef.sh" -type f 2>/dev/null || echo "No profiledef.sh found"
-        find . -name "releng" -type d 2>/dev/null || echo "No releng folder found"
-        
-    - name: Install archiso
-      run: |
-        pacman -Syu --noconfirm archiso squashfs-tools sed
-        
-    - name: Build ISO
-      run: |
-        # Build from current directory (adjust path as needed based on debug output)
-        mkarchiso -v ./releng
+        # Run archlinux container with privileged mode for mounting
+        docker run --privileged --rm \
+          -v "$(pwd):/workspace" \
+          -w /workspace \
+          archlinux:latest \
+          /bin/bash -c "
+            pacman -Syu --noconfirm archiso squashfs-tools sed
+            
+            # If zstd compression fails, uncomment the line below to use gzip instead
+            # sed -i 's/_squashfscomp=.*/_squashfscomp=(\"gzip\")/' /workspace/releng/profiledef.sh
+            
+            # Build the ISO
+            mkarchiso -v /workspace/releng
+          "
     
     - name: Get ISO info
       id: iso-info
