@@ -39,32 +39,6 @@ if [ -f /etc/default/grub ]; then
     grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
-# Setting up KDE plasma
-sudo -u liveuser plasma-apply-wallpaperimage /usr/share/backgrounds/velocity/default-wallpaper.jpg
-cd /usr/share/krohnkite
-sudo -u liveuser kpackagetool6 --type KWin/Script --install .
-
-mkdir -p /etc/skel/.config
-cat > /etc/skel/.config/kwinrc << 'EOF'
-[Plugins]
-krohnkiteEnabled=true
-
-[Script-krohnkite]
-layout=tile
-EOF
-
-mkdir -p /etc/skel/.config/autostart
-cat > /etc/skel/.config/autostart/krohnkite-autostart.desktop << 'EOF'
-[Desktop Entry]
-Type=Application
-Name=Krohnkite Autostart
-Exec=qdbus org.kde.KWin /KWin reconfigure
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=true
-EOF
-
-
 
 # Configure SDDM for autologin
 mkdir -p /etc/sddm.conf.d/

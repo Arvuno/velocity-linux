@@ -4,6 +4,7 @@ arch-install-scripts
 archinstall
 b43-fwcutter
 base
+base-devel
 bcachefs-tools
 bind
 bolt
@@ -31,6 +32,7 @@ f2fs-tools
 fatresize
 foot-terminfo
 fsarchiver
+git
 gpart
 gpm
 gptfdisk
@@ -83,6 +85,7 @@ openconnect
 openpgp-card-tools
 openssh
 openvpn
+otf-fira-sans
 partclone
 parted
 partimage
@@ -93,6 +96,7 @@ pv
 qemu-guest-agent
 refind
 reflector
+rofi
 rsync
 rxvt-unicode-terminfo
 screen
@@ -129,6 +133,8 @@ zsh
 firefox
 fastfetch
 plasma-desktop
+konsole
+dolphin
 waybar
 pipewire
 pipewire-pulse
@@ -146,10 +152,9 @@ xorg-xinit
 plymouth
 inkscape
 xorg-xrandr
-geany
+code
 vlc
 evince
 gnome-photos
 gtk3
-gnome-themes-extra
 htop
