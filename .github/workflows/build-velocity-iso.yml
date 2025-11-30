@@ -58,9 +58,9 @@ jobs:
         pwd
         echo "=== Looking for ISO files ==="
         find . -name "*.iso" -type f 2>/dev/null || echo "No ISO files found"
-        echo "=== Checking releng/out ==="
-        ls -la releng/out/ 2>/dev/null || echo "releng/out directory not found"
-        cd releng/out
+        echo "=== Checking ./out ==="
+        ls -la out/ 2>/dev/null || echo "./out directory not found"
+        cd out
         ISO_FILE=$(ls *.iso)
         ISO_SIZE=$(du -h $ISO_FILE | cut -f1)
         echo "iso_file=$ISO_FILE" >> $GITHUB_OUTPUT
