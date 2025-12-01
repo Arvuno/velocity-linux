@@ -66,6 +66,7 @@ jobs:
             #sed -i 's/_squashfscomp=.*/_squashfscomp=(\"gzip\")/' /workspace/releng/profiledef.sh
             
             # Build the ISO
+            cd
             mkarchiso -v /workspace/releng
           "
     
