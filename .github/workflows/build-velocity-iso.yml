@@ -31,17 +31,6 @@ jobs:
           -v "$(pwd):/workspace" \
           archlinux:latest \
           /bin/bash -c "
-            # Build Zen Browser
-            pacman -Syu --noconfirm base-devel git
-            cd /tmp
-            git clone https://aur.archlinux.org/zen-browser-bin.git
-            cd zen-browser-bin
-            # makepkg refuses to run as root, so create a build user
-            useradd -m builder
-            chown -R builder:builder .
-            sudo -u builder makepkg --noconfirm --skippgpcheck
-            cp *.pkg.tar.zst /workspace/releng/airootfs/root/packages/
-            
             echo '=== Your profiledef.sh compression setting ==='
             grep '_squashfscomp' /workspace/releng/profiledef.sh
             echo '=== Testing available compressors ==='
@@ -59,6 +48,18 @@ jobs:
           -w /workspace \
           archlinux:latest \
           /bin/bash -c "
+            # Build Zen Browser
+            pacman -Syu --noconfirm base-devel git
+            cd /tmp
+            git clone https://aur.archlinux.org/zen-browser-bin.git
+            cd zen-browser-bin
+            # makepkg refuses to run as root, so create a build user
+            useradd -m builder
+            chown -R builder:builder .
+            sudo -u builder makepkg --noconfirm --skippgpcheck
+            cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+          
             pacman -Syu --noconfirm archiso squashfs-tools sed
             
             # If zstd compression fails, uncomment the line below to use gzip instead
