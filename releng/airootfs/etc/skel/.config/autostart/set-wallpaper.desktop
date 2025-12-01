@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Set Wallpaper
+Exec=plasma-apply-wallpaperimage /usr/share/backgrounds/velocity/default-wallpaper.jpg
+Hidden=false
+X-KDE-autostart-phase=2

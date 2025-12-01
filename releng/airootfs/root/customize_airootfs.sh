@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create liveuser with sudo permissions
-useradd -m -G wheel -s /bin/bash liveuser
+useradd -m -G wheel -s /usr/bin/zsh liveuser
 echo "liveuser:velocity" | chpasswd
 
 # Set up sudo for wheel group (uncomment %wheel line in sudoers)
@@ -47,6 +47,17 @@ cat > /etc/sddm.conf.d/autologin.conf << 'EOF'
 User=liveuser
 Session=plasma.desktop
 EOF
+
+#Set file permissions
+chmod 755 releng/airootfs/usr/share/backgrounds
+chmod 755 releng/airootfs/usr/share/backgrounds/velocity
+chmod 644 releng/airootfs/usr/share/backgrounds/velocity/default-wallpaper.jpg
+chmod 755 releng/airootfs/etc/skel/.config/autostart
+chmod 644 releng/airootfs/etc/skel/.config/autostart/set-wallpaper.desktop
+chmod 755 releng/airootfs/usr/share/icons
+chmod 777 releng/airootfs/usr/share/icons/velocity.png
+chmod +x /usr/bin/oh-my-posh
+chmod +x /usr/bin/yay
 
 # Set up automatic login on TTY1 (fallback)
 mkdir -p /etc/systemd/system/getty@tty1.service.d/
