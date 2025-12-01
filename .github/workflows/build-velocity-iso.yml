@@ -17,7 +17,13 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
+      
+    - name: Set file permissions
+      run: |
+        chmod 755 airootfs/usr/share/backgrounds
+        chmod 755 airootfs/usr/share/backgrounds/velocity
+        chmod 644 airootfs/usr/share/backgrounds/velocity/default-wallpaper.jpg 
+  
     - name: Debug compression settings
       run: |
         docker run --rm \
