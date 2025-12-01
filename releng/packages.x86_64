@@ -11,6 +11,7 @@ bolt
 brltty
 broadcom-wl
 btrfs-progs
+chafa
 clonezilla
 cloud-init
 cryptsetup
@@ -28,6 +29,7 @@ efibootmgr
 espeakup
 ethtool
 exfatprogs
+ffmpeg
 f2fs-tools
 fatresize
 foot-terminfo
@@ -142,8 +144,8 @@ pipewire-alsa
 wireplumber
 networkmanager
 network-manager-applet
-file-roller
-gedit
+ark
+kate
 alacritty
 kitty
 sddm
@@ -155,6 +157,6 @@ xorg-xrandr
 code
 vlc
 evince
-gnome-photos
+gwenview
 gtk3
 htop

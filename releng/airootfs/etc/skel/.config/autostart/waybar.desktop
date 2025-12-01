@@ -1,7 +1,7 @@
 [Desktop Entry]
 Comment[en_US]=
 Comment=
-Exec=waybar
+Exec=waybar && plasma-apply-wallpaperimage /usr/share/backgrounds/velocity/default-wallpaper.jpg
 GenericName[en_US]=
 GenericName=
 Icon=

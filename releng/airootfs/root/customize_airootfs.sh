@@ -58,14 +58,13 @@ EOF
 
 # Create desktop entry for liveuser
 mkdir -p /etc/skel/Desktop
-cat > /etc/skel/Desktop/README.desktop << 'EOF'
-[Desktop Entry]
-Version=1.0
-Type=Link
-Name=Velocity Linux Documentation
-URL=https://github.com/colmehurze-tech/velocity-linux
-Icon=system-help
-EOF
+#cat > /etc/skel/Desktop/README.desktop << 'EOF'
+#Version=1.0
+#Type=Link
+#Name=Velocity Linux Documentation
+#URL=https://github.com/colmehurze-tech/velocity-linux
+#Icon=system-help
+#EOF
 
 # Copy skel to liveuser home (if it exists)
 if [ -d "/etc/skel" ]; then

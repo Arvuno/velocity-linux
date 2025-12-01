@@ -22,7 +22,15 @@ jobs:
       run: |
         chmod 755 releng/airootfs/usr/share/backgrounds
         chmod 755 releng/airootfs/usr/share/backgrounds/velocity
-        chmod 644 releng/airootfs/usr/share/backgrounds/velocity/default-wallpaper.jpg 
+        chmod 644 releng/airootfs/usr/share/backgrounds/velocity/default-wallpaper.jpg
+    
+    - name: Build Zen Browser
+      run: |
+        git clone https://aur.archlinux.org/zen-browser-bin.git
+        cd zen-browser-bin
+        makepkg --noconfirm
+        cp *.pkg.tar.zst releng/airootfs/packages/
+    
   
     - name: Debug compression settings
       run: |
