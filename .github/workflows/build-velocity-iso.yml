@@ -20,9 +20,9 @@ jobs:
       
     - name: Set file permissions
       run: |
-        chmod 755 airootfs/usr/share/backgrounds
-        chmod 755 airootfs/usr/share/backgrounds/velocity
-        chmod 644 airootfs/usr/share/backgrounds/velocity/default-wallpaper.jpg 
+        chmod 755 releng/airootfs/usr/share/backgrounds
+        chmod 755 releng/airootfs/usr/share/backgrounds/velocity
+        chmod 644 releng/airootfs/usr/share/backgrounds/velocity/default-wallpaper.jpg 
   
     - name: Debug compression settings
       run: |
