@@ -26,6 +26,7 @@ jobs:
     
     - name: Build Zen Browser
       run: |
+        sudo pacman -Syu --noconfirm base-devel
         git clone https://aur.archlinux.org/zen-browser-bin.git
         cd zen-browser-bin
         makepkg --noconfirm
