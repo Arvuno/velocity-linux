@@ -24,14 +24,6 @@ jobs:
         chmod 755 releng/airootfs/usr/share/backgrounds/velocity
         chmod 644 releng/airootfs/usr/share/backgrounds/velocity/default-wallpaper.jpg
     
-    - name: Build Zen Browser
-      run: |
-        sudo pacman -Syu --noconfirm base-devel
-        git clone https://aur.archlinux.org/zen-browser-bin.git
-        cd zen-browser-bin
-        makepkg --noconfirm
-        cp *.pkg.tar.zst releng/airootfs/packages/
-    
   
     - name: Debug compression settings
       run: |
@@ -39,6 +31,17 @@ jobs:
           -v "$(pwd):/workspace" \
           archlinux:latest \
           /bin/bash -c "
+            # Build Zen Browser
+            sudo pacman -S --needed base-devel git
+            cd /tmp
+            git clone https://aur.archlinux.org/zen-browser-bin.git
+            cd zen-browser-bin
+            # makepkg refuses to run as root, so create a build user
+            useradd -m builder
+            chown -R builder:builder .
+            sudo -u builder makepkg --noconfirm --skippgpcheck
+            cp *.pkg.tar.zst /workspace/releng/airootfs/root/packages/
+            
             echo '=== Your profiledef.sh compression setting ==='
             grep '_squashfscomp' /workspace/releng/profiledef.sh
             echo '=== Testing available compressors ==='
