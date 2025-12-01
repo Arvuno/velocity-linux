@@ -32,7 +32,7 @@ jobs:
           archlinux:latest \
           /bin/bash -c "
             # Build Zen Browser
-            sudo pacman -S --needed base-devel git
+            pacman -S --needed base-devel git sudo
             cd /tmp
             git clone https://aur.archlinux.org/zen-browser-bin.git
             cd zen-browser-bin
