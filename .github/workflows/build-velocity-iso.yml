@@ -66,7 +66,7 @@ jobs:
             #sed -i 's/_squashfscomp=.*/_squashfscomp=(\"gzip\")/' /workspace/releng/profiledef.sh
             
             # Build the ISO
-            cd /home/runner/work/velocity-linux/velocity-linux 
+            cd /workspace
             mkarchiso -v /workspace/releng
           "
     
