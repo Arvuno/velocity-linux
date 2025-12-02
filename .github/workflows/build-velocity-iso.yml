@@ -57,6 +57,7 @@ jobs:
             useradd -m builder
             chown -R builder:builder .
             sudo -u builder makepkg --noconfirm --skippgpcheck
+            find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
 
           
