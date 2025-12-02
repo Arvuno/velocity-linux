@@ -49,7 +49,7 @@ jobs:
           archlinux:latest \
           /bin/bash -c "
             # Build Zen Browser
-            pacman -Syu --noconfirm base-devel git
+            pacman -Syu --noconfirm base-devel git gtk3 libxt mime-types dbus-glib nss ttf-liberation systemd ffmpeg
             cd /tmp
             git clone https://aur.archlinux.org/zen-browser-bin.git
             cd zen-browser-bin
