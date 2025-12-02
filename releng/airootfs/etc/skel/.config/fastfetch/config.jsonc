@@ -1,8 +1,8 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
  "logo": {
-  "type": "chafa",
- "source": "/usr/share/icons/velocity.png"
+  "type": "file",
+ "source": "/usr/share/icons/velocity.txt"
 },
 
  "modules": [
