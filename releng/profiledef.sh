@@ -28,6 +28,10 @@ file_permissions=(
   ["/usr/local/bin/livecd-sound"]="0:0:755"
 )
 
+profile_prepare() {
+    make_customize_airootfs
+}
+
 make_customize_airootfs() {
     # Install local AUR packages
     pacman -U --noconfirm /packages/*.pkg.tar.zst
