@@ -15,6 +15,7 @@ chafa
 clonezilla
 cloud-init
 cryptsetup
+dbus-glib
 darkhttpd
 ddrescue
 dhcpcd
@@ -47,6 +48,7 @@ iw
 iwd
 jfsutils
 kitty-terminfo
+libtxt
 ldns
 less
 lftp
@@ -69,6 +71,7 @@ memtest86+-efi
 mkinitcpio
 mkinitcpio-archiso
 mkinitcpio-nfs-utils
+mime-types
 mmc-utils
 modemmanager
 mtools
@@ -80,6 +83,7 @@ nilfs-utils
 nmap
 ntfs-3g
 nvme-cli
+nss
 open-iscsi
 open-vm-tools
 openconnect
@@ -116,6 +120,7 @@ testdisk
 tmux
 tpm2-tools
 tpm2-tss
+ttf-liberation
 udftools
 usb_modeswitch
 usbmuxd
