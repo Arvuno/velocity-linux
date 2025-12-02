@@ -9,7 +9,7 @@ echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 
 
 #Install local packages
-pacman -U --noconfirm /packages/*.pkg.tar.zst
+#pacman -U --noconfirm /packages/*.pkg.tar.zst
 
 # Configure Plymouth
 echo "Setting up Velocity Plymouth theme..."
