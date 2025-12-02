@@ -28,11 +28,43 @@ file_permissions=(
   ["/usr/local/bin/livecd-sound"]="0:0:755"
 )
 
-profile_prepare() {
-    make_customize_airootfs
-}
 
 make_customize_airootfs() {
-    # Install local AUR packages
-    pacman -U --noconfirm /packages/*.pkg.tar.zst
-}
+    echo "==================================="
+    echo "Starting customization"
+    echo "==================================="
+    
+    # Check available space
+    echo "Disk space:"
+    df -h
+    
+    # Check if packages directory exists
+    echo "Checking /packages directory:"
+    ls -lh /packages/ 2>&1 || echo "ERROR: /packages not found"
+    
+    # Count package files
+    echo "Package files found:"
+    ls /packages/*.pkg.tar.zst 2>&1 || echo "No .pkg.tar.zst files found"
+    
+    # Try to install with verbose output
+    echo "Attempting to install packages:"
+    if ls /packages/*.pkg.tar.zst 1> /dev/null 2>&1; then
+        pacman -U --noconfirm /packages/*.pkg.tar.zst
+        INSTALL_RESULT=$?
+        echo "Installation exit code: $INSTALL_RESULT"
+    else
+        echo "ERROR: No package files to install"
+    fi
+    
+    # Verify installation
+    echo "Verifying zen-browser installation:"
+    pacman -Q zen-browser-bin 2>&1 || echo "zen-browser-bin NOT installed"
+    
+    # Set zsh as default shell
+    echo "Setting zsh as default shell:"
+    sed -i 's|SHELL=/bin/bash|SHELL=/usr/bin/zsh|' /etc/default/useradd
+    
+    echo "==================================="
+    echo "Customization complete"
+    echo "==================================="
+} 
