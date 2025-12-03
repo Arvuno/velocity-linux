@@ -45,8 +45,9 @@ jobs:
         # Run archlinux container with privileged mode for mounting
         docker run --privileged --rm \
           -v "$(pwd):/workspace" \
-          -w /workspace \ --shm-size=4g \
-      --tmpfs /tmp:exec,size=8G \
+          -w /workspace \
+          --shm-size=4g \
+          --tmpfs /tmp:exec,size=8G \
           archlinux:latest \
           /bin/bash -c "
             # Build Zen Browser
