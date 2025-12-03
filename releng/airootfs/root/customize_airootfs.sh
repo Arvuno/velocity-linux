@@ -11,6 +11,40 @@ echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 #Install local packages
 #pacman -U --noconfirm /packages/*.pkg.tar.zst
 
+# Install zen browser
+
+echo "==================================="
+echo "Starting Velocity Linux customization"
+echo "==================================="
+
+# Check disk space
+echo "Available disk space:"
+df -h
+
+# Install local packages
+echo "Installing local AUR packages..."
+if [ -d /packages ] && ls /packages/*.pkg.tar.zst 1> /dev/null 2>&1; then
+    echo "Found packages:"
+    ls -lh /packages/
+    pacman -U --noconfirm /packages/*.pkg.tar.zst
+    echo "Packages installed successfully"
+else
+    echo "No packages found in /packages/"
+fi
+
+# Verify Zen Browser installation
+echo "Verifying installations:"
+pacman -Q zen-browser-bin || echo "zen-browser-bin not installed"
+
+# Set zsh as default shell
+echo "Setting zsh as default shell..."
+sed -i 's|SHELL=/bin/bash|SHELL=/usr/bin/zsh|' /etc/default/useradd
+
+echo "==================================="
+echo "Customization complete"
+echo "===================================" 
+
+
 # Configure Plymouth
 echo "Setting up Velocity Plymouth theme..."
 
