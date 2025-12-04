@@ -7,9 +7,6 @@ echo "liveuser:velocity" | chpasswd
 # Set up sudo for wheel group (uncomment %wheel line in sudoers)
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 
-# Adding custom repository
-cd /packages
-repo-add packages.db.tar.gz *.pkg.tar.zst
 
 # Set zsh as default shell
 echo "Setting zsh as default shell..."

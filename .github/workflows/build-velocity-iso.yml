@@ -54,7 +54,7 @@ jobs:
             git clone https://aur.archlinux.org/zen-browser-bin.git
             git clone https://aur.archlinux.org/yay.git
             
-            # building zen-browser
+            # Building zen-browser
             cd zen-browser-bin
             useradd -m builder
             chown -R builder:builder .
@@ -62,7 +62,7 @@ jobs:
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
 
-            # building yay
+            # Building yay
             cd ..
             cd yay
             chown -R builder:builder .
@@ -70,6 +70,11 @@ jobs:
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
             
+            # Setting up custom local repository
+            cd /workspace/releng/airootfs/packages
+            repo-add packages.db.tar.gz *.pkg.tar.zst
+
+
             # Getting tools to build the iso
             pacman -Syu --noconfirm archiso squashfs-tools sed
             
