@@ -7,34 +7,9 @@ echo "liveuser:velocity" | chpasswd
 # Set up sudo for wheel group (uncomment %wheel line in sudoers)
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 
-
-#Install local packages
-#pacman -U --noconfirm /packages/*.pkg.tar.zst
-
-# Install zen browser
-
-echo "==================================="
-echo "Starting Velocity Linux customization"
-echo "==================================="
-
-# Check disk space
-echo "Available disk space:"
-df -h
-
-# Install local packages
-echo "Installing local AUR packages..."
-if [ -d /packages ] && ls /packages/*.pkg.tar.zst 1> /dev/null 2>&1; then
-    echo "Found packages:"
-    ls -lh /packages/
-    pacman -U --noconfirm /packages/*.pkg.tar.zst
-    echo "Packages installed successfully"
-else
-    echo "No packages found in /packages/"
-fi
-
-# Verify Zen Browser installation
-echo "Verifying installations:"
-pacman -Q zen-browser-bin || echo "zen-browser-bin not installed"
+# Adding custom repository
+cd /packages
+repo-add packages.db.tar.gz *.pkg.tar.zst
 
 # Set zsh as default shell
 echo "Setting zsh as default shell..."
@@ -44,6 +19,9 @@ echo "==================================="
 echo "Customization complete"
 echo "===================================" 
 
+# Installing lazy-vim
+git clone https://github.com/LazyVim/starter /etc/skel/.config/nvim
+rm -rf /etc/skel/.config/nvim/.git
 
 # Configure Plymouth
 echo "Setting up Velocity Plymouth theme..."

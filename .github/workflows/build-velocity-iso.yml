@@ -46,23 +46,31 @@ jobs:
         docker run --privileged --rm \
           -v "$(pwd):/workspace" \
           -w /workspace \
-          --shm-size=4g \
-          --tmpfs /tmp:exec,size=8G \
           archlinux:latest \
           /bin/bash -c "
-            # Build Zen Browser
+            # Download Zen Browser and yay
             pacman -Syu --noconfirm base-devel git gtk3 libxt mime-types dbus-glib nss ttf-liberation systemd ffmpeg
             cd /tmp
             git clone https://aur.archlinux.org/zen-browser-bin.git
+            git clone https://aur.archlinux.org/yay.git
+            
+            # building zen-browser
             cd zen-browser-bin
-            # makepkg refuses to run as root, so create a build user
             useradd -m builder
             chown -R builder:builder .
             sudo -u builder makepkg --noconfirm --skippgpcheck --nodeps
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
 
-          
+            # building yay
+            cd ..
+            cd yay
+            chown -R builder:builder .
+            sudo -u builder makepkg --noconfirm --skippgpcheck --nodeps
+            find *.pkg.tar.zst
+            cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+            
+            # Getting tools to build the iso
             pacman -Syu --noconfirm archiso squashfs-tools sed
             
             # If zstd compression fails, uncomment the line below to use gzip instead
@@ -70,11 +78,7 @@ jobs:
             
             # Build the ISO
             cd /workspace 
-             # Mount a larger tmpfs for the work directory
-        mkdir -p /workspace/work
-        mount -t tmpfs -o size=8G tmpfs /workspace/work 
-
-            mkarchiso -v -w /workspace/work /workspace/releng 
+            mkarchiso -v /workspace/releng 
           "
     
     - name: Get ISO info

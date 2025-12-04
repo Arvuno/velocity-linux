@@ -11,6 +11,7 @@ bolt
 brltty
 broadcom-wl
 btrfs-progs
+catppuccin-gtk-theme-mocha
 chafa
 clonezilla
 cloud-init
@@ -27,6 +28,7 @@ dosfstools
 e2fsprogs
 edk2-shell
 efibootmgr
+elisa
 espeakup
 ethtool
 exfatprogs
@@ -46,7 +48,11 @@ intel-ucode
 irssi
 iw
 iwd
+isoimagewriter
 jfsutils
+kamoso
+kcalc
+ktorrent
 kitty-terminfo
 libxt
 ldns
@@ -78,6 +84,7 @@ mtools
 nano
 nbd
 ndisc6
+neovim
 nfs-utils
 nilfs-utils
 nmap
@@ -92,6 +99,7 @@ openssh
 openvpn
 otf-fira-sans
 partclone
+partitionmanager
 parted
 partimage
 pcsclite
@@ -136,7 +144,6 @@ xdg-utils
 xfsprogs
 xl2tpd
 zsh
-firefox
 fastfetch
 plasma-desktop
 konsole
@@ -164,3 +171,5 @@ evince
 gwenview
 gtk3
 htop
+yay
+zen-browser-bin
