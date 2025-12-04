@@ -18,6 +18,6 @@ Features 🎉:
 
 If you like my work, consider starring my repository. It keeps me motivated to continue building velocity ❤️
 
-If you want to contribute to the building of velocity linux, you can email me at [this link](colmehurze@gmail.com). 
+If you want to contribute to the building of velocity linux, you can email me at [this link](mailto:colmehurze@gmail.com). 
 
 
