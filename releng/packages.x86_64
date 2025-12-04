@@ -38,6 +38,7 @@ fatresize
 foot-terminfo
 fsarchiver
 git
+go
 gpart
 gpm
 gptfdisk

@@ -66,14 +66,13 @@ jobs:
             cd ..
             cd yay
             chown -R builder:builder .
-            sudo -u builder makepkg --noconfirm --skippgpcheck --nodeps
+            sudo -u builder makepkg --noconfirm --skippgpcheck
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
             
             # Setting up custom local repository
             cd /workspace/releng/airootfs/packages
-            repo-add packages.db.tar.gz *.pkg.tar.zst
-
+            repo-add -s -v packages.db.tar.gz *.pkg.tar.zst
 
             # Getting tools to build the iso
             pacman -Syu --noconfirm archiso squashfs-tools sed
