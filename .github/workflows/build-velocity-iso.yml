@@ -12,11 +12,24 @@ env:
 
 jobs:
   build-iso:
-    runs-on: ubuntu-8core 
+    runs-on: ubuntu-latest 
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    
+    - name: Clean up GitHub runner disk
+      run: |
+        # Free up maximum space on the 14GB runner
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/hostedtoolcache/CodeQL
+        sudo rm -rf /image
+        sudo apt-get clean
+        sudo rm -rf /var/lib/apt/lists/*
+        
+        echo "=== Available space after cleanup ==="
+        df -h
       
     - name: Set file permissions
       run: |
