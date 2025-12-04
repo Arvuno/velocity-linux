@@ -75,6 +75,7 @@ jobs:
             repo-add -s -v packages.db.tar.gz *.pkg.tar.zst
             ln -sf packages.db.tar.gz packages.db
             ln -sf packages.files.tar.gz packages.files
+            ls -la packages.*
 
             # Getting tools to build the iso
             pacman -Syu --noconfirm archiso squashfs-tools sed
