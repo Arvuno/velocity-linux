@@ -49,7 +49,7 @@ jobs:
           archlinux:latest \
           /bin/bash -c "
             # Download Zen Browser and yay
-            pacman -Syu --noconfirm base-devel git gtk3 libxt mime-types dbus-glib nss ttf-liberation systemd ffmpeg
+            pacman -Syu --noconfirm base-devel git go gtk3 libxt mime-types dbus-glib nss ttf-liberation systemd ffmpeg
             cd /tmp
             git clone https://aur.archlinux.org/zen-browser-bin.git
             git clone https://aur.archlinux.org/yay.git
@@ -73,6 +73,8 @@ jobs:
             # Setting up custom local repository
             cd /workspace/releng/airootfs/packages
             repo-add -s -v packages.db.tar.gz *.pkg.tar.zst
+            ln -sf packages.db.tar.gz packages.db
+            ln -sf packages.files.tar.gz packages.files
 
             # Getting tools to build the iso
             pacman -Syu --noconfirm archiso squashfs-tools sed
