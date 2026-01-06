@@ -61,11 +61,12 @@ jobs:
           -w /workspace \
           archlinux:latest \
           /bin/bash -c "
-            # Download Zen Browser and yay
+            # Download AUR helper and apps
             pacman -Syu --noconfirm base-devel git go gtk3 libxt mime-types dbus-glib nss ttf-liberation systemd ffmpeg
             cd /tmp
             git clone https://aur.archlinux.org/zen-browser-bin.git
             git clone https://aur.archlinux.org/yay.git
+            git clone https://aur.archlinux.org/quickshell-git.git
             
             # Building zen-browser
             cd zen-browser-bin
@@ -83,6 +84,14 @@ jobs:
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
             
+            # Building quickshell
+            cd ..
+            cd quickshell-git
+            chown -R builder:builder .
+            sudo -u builder makepkg --noconfirm --skippgpcheck
+            find *.pkg.tar.zst
+            cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
             # Setting up custom local repository
             cd /workspace/releng/airootfs/packages
             repo-add -s -v packages.db.tar.gz *.pkg.tar.zst

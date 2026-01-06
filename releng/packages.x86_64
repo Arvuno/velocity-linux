@@ -158,6 +158,12 @@ xorg-xrandr
 
 #DE/WM installation:
 niri
+quickshell-git
+
+#Some dependencies for the shell:
+brightnessctl
+upower
+playerctl
 
 #Ricing stuff:
 zsh
