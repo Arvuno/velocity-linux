@@ -62,11 +62,12 @@ jobs:
           archlinux:latest \
           /bin/bash -c "
             # Download AUR helper and apps
-            pacman -Syu --noconfirm base-devel git go gtk3 libxt mime-types dbus-glib nss ttf-liberation systemd ffmpeg qt6-declarative qt6-base jemalloc qt6-svg libpipewire google-breakpad
+            pacman -Syu --noconfirm base-devel git go gtk3 libxt mime-types dbus-glib nss ttf-liberation systemd ffmpeg qt6-declarative qt6-base jemalloc qt6-svg libpipewire
             cd /tmp
             git clone https://aur.archlinux.org/zen-browser-bin.git
             git clone https://aur.archlinux.org/yay.git
             git clone https://aur.archlinux.org/quickshell-git.git
+            git clone https://aur.archlinux.org/google-breakpad.git
             
             # Building zen-browser
             cd zen-browser-bin
@@ -83,7 +84,8 @@ jobs:
             sudo -u builder makepkg --noconfirm --skippgpcheck
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
-            
+            yay -S google-breakpad
+
             # Building quickshell
             cd ..
             cd quickshell-git
