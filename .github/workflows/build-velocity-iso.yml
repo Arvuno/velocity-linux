@@ -86,14 +86,7 @@ jobs:
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
             pacman -U --noconfirm *.pkg.tar.zst
 
-            # Building quickshell
-            cd ..
-            cd quickshell-git
-            chown -R builder:builder .
-            sudo -u builder makepkg --noconfirm --skippgpcheck
-            find *.pkg.tar.zst
-            cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
-
+            # Building google-breakpad
             cd ..
             cd google-breakpad
             chown -R builder:builder .
@@ -101,6 +94,17 @@ jobs:
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
             pacman -U --noconfirm *.pkg.tar.zst
+
+            # Building quickshell
+            echo "Building qs"
+            cd ..
+            cd quickshell-git
+            chown -R builder:builder .
+            sudo -u builder makepkg --noconfirm --skippgpcheck
+            find *.pkg.tar.zst
+            cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+            
 
             # Setting up custom local repository
             cd /workspace/releng/airootfs/packages
