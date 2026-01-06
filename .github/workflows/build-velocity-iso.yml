@@ -103,9 +103,7 @@ jobs:
             sudo -u builder makepkg --noconfirm --skippgpcheck
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
-
             
-
             # Setting up custom local repository
             cd /workspace/releng/airootfs/packages
             repo-add -s -v packages.db.tar.gz *.pkg.tar.zst
