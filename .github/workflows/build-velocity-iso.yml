@@ -100,7 +100,7 @@ jobs:
             sudo -u builder makepkg --noconfirm --skippgpcheck
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
-            pacman -U --noconfirm google-breakpad
+            pacman -U --noconfirm *.pkg.tar.zst
 
             # Setting up custom local repository
             cd /workspace/releng/airootfs/packages
