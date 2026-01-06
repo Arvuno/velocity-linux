@@ -25,7 +25,10 @@ jobs:
         sudo rm -rf /usr/local/lib/android
         sudo rm -rf /opt/hostedtoolcache/CodeQL
         sudo rm -rf /image
+        sudo rm -rf /usr/local/share/powershell
+        sudo rm -rf /usr/local/lib/node_modules
         sudo apt-get clean
+        sudo apt-get autoremove -y
         sudo rm -rf /var/lib/apt/lists/*
         
         echo "=== Available space after cleanup ==="
@@ -103,7 +106,7 @@ jobs:
             sudo -u builder makepkg --noconfirm --skippgpcheck
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
-            
+
             # Setting up custom local repository
             cd /workspace/releng/airootfs/packages
             repo-add -s -v packages.db.tar.gz *.pkg.tar.zst
