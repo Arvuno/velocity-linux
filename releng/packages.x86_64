@@ -110,7 +110,6 @@ pv
 qemu-guest-agent
 refind
 reflector
-rofi
 rsync
 rxvt-unicode-terminfo
 screen
@@ -144,33 +143,45 @@ wvdial
 xdg-utils
 xfsprogs
 xl2tpd
-zsh
-fastfetch
-plasma-desktop
-konsole
-dolphin
-waybar
 pipewire
 pipewire-pulse
 pipewire-alsa
 wireplumber
 networkmanager
 network-manager-applet
-ark
-kate
-alacritty
-kitty
 sddm
 xorg-server
 xorg-xinit
 plymouth
 inkscape
 xorg-xrandr
+
+#DE/WM installation:
+niri
+
+#Ricing stuff:
+zsh
+fastfetch
+waybar
+rofi
+
+#Terminals:
+alacritty
+kitty
+
+#File manager:
+dolphin
+
+#Extra software:
 code
 vlc
 evince
 gwenview
 gtk3
 htop
+ark
+kate
+
+#AUR stuff:
 yay
 zen-browser-bin
