@@ -84,6 +84,7 @@ jobs:
             sudo -u builder makepkg --noconfirm --skippgpcheck
             find *.pkg.tar.zst
             cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+            pacman -U *.pkg.tar.zst
             yay -S google-breakpad
 
             # Building quickshell
