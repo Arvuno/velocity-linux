@@ -65,7 +65,7 @@ jobs:
           archlinux:latest \
           /bin/bash -c "
             # Download AUR helper and apps
-            pacman -Syu --noconfirm base-devel git go gtk3 libxt mime-types dbus-glib nss ttf-liberation systemd ffmpeg qt6-declarative qt6-base jemalloc qt6-svg libpipewire
+            pacman -Syu --noconfirm base-devel git go gtk3 libxt mime-types dbus-glib nss ttf-liberation systemd ffmpeg qt6-declarative qt6-base jemalloc qt6-svg libpipewire qt6-shadertools wayland-protocols cli11 ninja cmake
             cd /tmp
             git clone https://aur.archlinux.org/zen-browser-bin.git
             git clone https://aur.archlinux.org/yay.git
