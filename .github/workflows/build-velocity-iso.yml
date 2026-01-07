@@ -99,7 +99,7 @@ jobs:
             pacman -U --noconfirm *.pkg.tar.zst
 
             # Building quickshell
-            echo "Building qs"
+            echo Building qs
             cd ..
             cd quickshell-git
             chown -R builder:builder .
