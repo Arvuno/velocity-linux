@@ -58,7 +58,7 @@ mkdir -p /etc/sddm.conf.d/
 cat > /etc/sddm.conf.d/autologin.conf << 'EOF'
 [Autologin]
 User=liveuser
-Session=plasma.desktop
+Session=niri.desktop
 EOF
 
 #Set file permissions

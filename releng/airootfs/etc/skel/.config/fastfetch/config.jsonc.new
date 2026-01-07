@@ -1,0 +1,76 @@
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
+    "logo": {
+        "source": "arch",
+        "type": "small",
+        "padding": {
+            "top": 1,
+            "left": 2
+        }
+    },
+    "display": {
+        "separator": " ➜  "
+    },
+    "modules": [
+        {
+            "type": "custom",
+            "format": "╭──────────────────────────────╮"
+        },
+        {
+            "type": "title",
+            "format": "│  colmehurze@archlinux        │"
+        },
+        {
+            "type": "custom",
+            "format": "├──────────────────────────────┤"
+        },
+        {
+            "type": "os",
+            "key": "│   ",
+            "keyColor": "34",
+            "format": "{2} {8}    │"
+        },
+        {
+            "type": "kernel",
+            "key": "│   ",
+            "keyColor": "34",
+            "format": "{2}        │"
+        },
+        {
+            "type": "shell",
+            "key": "│   ",
+            "keyColor": "34",
+            "format": "{1} {4}               │"
+        },
+        {
+            "type": "wm",
+            "key": "│   ",
+            "keyColor": "34",
+            "format": "{2}                  │"
+        },
+        {
+            "type": "uptime",
+            "key": "│   ",
+            "keyColor": "34",
+            "format": "{2}h {3>2}m                │"
+        },
+        {
+            "type": "cpu",
+            "key": "│   ",
+            "keyColor": "34",
+            "format": "{2}          │"
+        },
+        {
+            "type": "custom",
+            "format": "├──────────────────────────────┤"
+        },
+        {
+            "type": "custom",
+            "format": "│  \u001b[90m  \u001b[31m  \u001b[32m  \u001b[33m  \u001b[34m  \u001b[35m  \u001b[36m  \u001b[37m      │"
+        },
+        {
+            "type": "custom",
+            "format": "╰──────────────────────────────╯"
+        }
+    ]
+}

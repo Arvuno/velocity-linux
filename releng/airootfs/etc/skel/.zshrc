@@ -4,7 +4,7 @@
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-eval "$(oh-my-posh init zsh --config $HOME/.zsh.d/atomic.omp.json)"
+eval "$(oh-my-posh init zsh --config $HOME/.zsh.d/pure.omp.json)"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
