@@ -164,6 +164,11 @@ quickshell-git
 brightnessctl
 upower
 playerctl
+wl-clipboard
+cliphist
+grim
+slurp
+matugen
 
 #Ricing stuff:
 zsh

@@ -52,6 +52,47 @@ sudo -u builder makepkg --noconfirm --skippgpcheck
 find *.pkg.tar.zst
 cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
 
+cd ..
+cd iNiR/sdata/dist-arch/inir-quickshell
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+cd ..
+cd iNiR/sdata/dist-arch/inir-toolkit
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+cd ..
+cd iNiR/sdata/dist-arch/inir-audio
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+cd ..
+cd iNiR/sdata/dist-arch/inir-screencapture
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+cd ..
+cd iNiR/sdata/dist-arch/inir-fonts
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+# Installing the latest version of iNiR
+export iidir=/workspace/releng/airootfs/etc/skel/.config/quickshell/ii/
+git clone https://github.com/snowarch/inir.git $iidir
+rm -rf $iidir/dots/.config/niri
+cp -r $iidir/dots/.config/* /workspace/releng/airootfs/etc/skel/.config/
+
 # Setting up custom local repository
 cd /workspace/releng/airootfs/packages
 repo-add -s -v packages.db.tar.gz *.pkg.tar.zst
