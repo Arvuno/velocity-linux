@@ -64,6 +64,7 @@ jobs:
           -w /workspace \
           archlinux:latest \
           /bin/bash -c "
+            chmod +x *.sh
             /workspace/installdeps-gh-runner.sh
             /workspace/buildiso-gh-runner.sh
           "
