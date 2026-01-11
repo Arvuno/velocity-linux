@@ -87,6 +87,73 @@ sudo -u builder makepkg --noconfirm --skippgpcheck
 find *.pkg.tar.zst
 cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
 
+# Installing AUR font dependencies for iNiR
+# Matugen:
+git clone https://aur.archlinux.org/matugen-bin.git
+cd ..
+cd matugen-bin
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+# ttf and otf fonts:
+git clone https://aur.archlinux.org/otf-space-grotesk.git
+cd ..
+cd otf-space-grotesk
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+git clone https://aur.archlinux.org/ttf-jetbrains-mono-nerd.git
+cd ..
+cd ttf-jetbrains-mono-nerd
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+git clone https://aur.archlinux.org/ttf-material-symbols-variable-git.git
+cd ..
+cd ttf-material-symbols-variable-git
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+git clone https://aur.archlinux.org/ttf-readex-pro.git
+cd ..
+cd ttf-readex-pro
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+git clone https://aur.archlinux.org/ttf-rubik-vf.git
+cd ..
+cd ttf-rubik-vf
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+git clone https://aur.archlinux.org/ttf-twemoji.git
+cd ..
+cd ttf-twemoji
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
+git clone https://aur.archlinux.org/adw-gtk-theme-git.git
+cd ..
+cd adw-gtk-theme-git
+chown -R builder:builder .
+sudo -u builder makepkg --noconfirm --skippgpcheck
+find *.pkg.tar.zst
+cp *.pkg.tar.zst /workspace/releng/airootfs/packages/
+
 # Installing the latest version of iNiR
 export iidir=/workspace/releng/airootfs/etc/skel/.config/quickshell/ii/
 git clone https://github.com/snowarch/inir.git $iidir
