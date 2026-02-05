@@ -1,5 +1,5 @@
 name: Compile Firefox for Gentoo
-on: [workflow_dispatch] # Allows you to trigger it manually
+on: [workflow_dispatch]
 
 jobs:
   build:
@@ -10,31 +10,39 @@ jobs:
     steps:
       - name: Update Portage and Sync
         run: |
+          # Use webrsync to save time/bandwidth on the runner
           emerge-webrsync
           mkdir -p /etc/portage/package.use
           
       - name: Set Custom USE Flags
         run: |
-          # Tailored for your River/Wayland minimalist setup
-          echo "www-client/firefox -X wayland -telemetry dbus -cups -pulseaudio -sndio lto pgo" > /etc/portage/package.use/firefox
+          # Fix the "REQUIRED_USE" and dependency conflicts
+          echo "www-client/firefox wayland dbus -X -telemetry -cups -pulseaudio -sndio lto pgo" > /etc/portage/package.use/firefox
+          echo "media-libs/libvpx postproc" >> /etc/portage/package.use/firefox
+          echo "media-libs/mesa wayland" >> /etc/portage/package.use/firefox
+          echo "media-libs/freetype harfbuzz" >> /etc/portage/package.use/firefox
+          echo "media-libs/libglvnd X" >> /etc/portage/package.use/firefox
+          echo "x11-libs/gtk+ wayland -X" >> /etc/portage/package.use/firefox
           echo "media-libs/libepoxy -X" >> /etc/portage/package.use/firefox
-          echo "x11-libs/gtk+ -X wayland" >> /etc/portage/package.use/firefox
           
       - name: Configure Make Options
         run: |
-          # GitHub Runners have ~7GB RAM, so we can go slightly faster than your laptop
+          # Optimize for the GitHub Runner (2 cores)
           echo 'MAKEOPTS="-j2"' >> /etc/portage/make.conf
+          # Tell Portage to create a .gpkg file when finished
           echo 'FEATURES="buildpkg"' >> /etc/portage/make.conf
-          # Using generic x86-64 to ensure it runs on your laptop safely
+          # Using generic flags to ensure it runs on your laptop CPU
           echo 'COMMON_FLAGS="-O2 -pipe"' >> /etc/portage/make.conf
+          # Accept testing keywords for the latest Firefox
+          echo 'ACCEPT_KEYWORDS="~amd64"' >> /etc/portage/make.conf
 
       - name: Install Build Dependencies & Compile
         run: |
-          # This will take 1-3 hours on GitHub's servers
+          # This is the "Big Grind" (approx 2-4 hours)
           emerge --verbose www-client/firefox
 
       - name: Upload Binary Package as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: firefox-gentoo-binpkg
-          path: /var/cache/binpkgs/www-client/firefox-*.gpkg
+          path: /var/cache/binpkgs/www-client/firefox-*.gpk g
