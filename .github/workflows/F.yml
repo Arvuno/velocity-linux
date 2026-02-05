@@ -1,0 +1,41 @@
+name: Compile Firefox Speed-Run
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: gentoo/stage3:amd64-openrc
+      options: --user root
+    steps:
+      - name: Update Portage
+        run: emerge-webrsync
+          
+      - name: Set Flags (Matching your make.conf)
+        run: |
+          mkdir -p /etc/portage/package.use
+          # Combined flags based on your photos: no bloat, Wayland only, no PGO/LTO
+          echo "www-client/firefox wayland dbus -X -telemetry -cups -pulseaudio -sndio -lto -pgo -bluetooth -wifi -hwaccel" > /etc/portage/package.use/firefox
+          echo "media-libs/libvpx postproc" >> /etc/portage/package.use/firefox
+          echo "media-libs/mesa wayland" >> /etc/portage/package.use/firefox
+          echo "media-libs/freetype harfbuzz" >> /etc/portage/package.use/firefox
+          echo "media-libs/libglvnd X" >> /etc/portage/package.use/firefox
+          echo "x11-libs/gtk+ wayland -X" >> /etc/portage/package.use/firefox
+          echo "media-libs/libepoxy -X" >> /etc/portage/package.use/firefox
+          
+      - name: Configure Make
+        run: |
+          # Use -j4 for the GitHub runner to speed things up
+          echo 'MAKEOPTS="-j4"' >> /etc/portage/make.conf
+          echo 'FEATURES="buildpkg"' >> /etc/portage/make.conf
+          echo 'COMMON_FLAGS="-O2 -pipe"' >> /etc/portage/make.conf
+          echo 'ACCEPT_KEYWORDS="~amd64"' >> /etc/portage/make.conf
+
+      - name: The Fast Compile
+        run: emerge --verbose www-client/firefox
+
+      - name: Upload Binary Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-gentoo-binpkg
+          path: /var/cache/binpkgs/www-client/firefox-*.gpkg
