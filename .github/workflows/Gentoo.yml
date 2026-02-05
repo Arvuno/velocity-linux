@@ -1,0 +1,40 @@
+name: Compile Firefox for Gentoo
+on: [workflow_dispatch] # Allows you to trigger it manually
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: gentoo/stage3:amd64-openrc
+      options: --user root
+    steps:
+      - name: Update Portage and Sync
+        run: |
+          emerge-webrsync
+          mkdir -p /etc/portage/package.use
+          
+      - name: Set Custom USE Flags
+        run: |
+          # Tailored for your River/Wayland minimalist setup
+          echo "www-client/firefox -X wayland -telemetry -dbus -cups -pulseaudio -sndio lto pgo" > /etc/portage/package.use/firefox
+          echo "media-libs/libepoxy -X" >> /etc/portage/package.use/firefox
+          echo "x11-libs/gtk+ -X wayland" >> /etc/portage/package.use/firefox
+          
+      - name: Configure Make Options
+        run: |
+          # GitHub Runners have ~7GB RAM, so we can go slightly faster than your laptop
+          echo 'MAKEOPTS="-j2"' >> /etc/portage/make.conf
+          echo 'FEATURES="buildpkg"' >> /etc/portage/make.conf
+          # Using generic x86-64 to ensure it runs on your laptop safely
+          echo 'COMMON_FLAGS="-O2 -pipe"' >> /etc/portage/make.conf
+
+      - name: Install Build Dependencies & Compile
+        run: |
+          # This will take 1-3 hours on GitHub's servers
+          emerge --verbose www-client/firefox
+
+      - name: Upload Binary Package as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-gentoo-binpkg
+          path: /var/cache/binpkgs/www-client/firefox-*.gpkg
