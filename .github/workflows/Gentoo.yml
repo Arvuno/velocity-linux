@@ -16,7 +16,7 @@ jobs:
       - name: Set Custom USE Flags
         run: |
           # Tailored for your River/Wayland minimalist setup
-          echo "www-client/firefox -X wayland -telemetry -dbus -cups -pulseaudio -sndio lto pgo" > /etc/portage/package.use/firefox
+          echo "www-client/firefox -X wayland -telemetry dbus -cups -pulseaudio -sndio lto pgo" > /etc/portage/package.use/firefox
           echo "media-libs/libepoxy -X" >> /etc/portage/package.use/firefox
           echo "x11-libs/gtk+ -X wayland" >> /etc/portage/package.use/firefox
           
