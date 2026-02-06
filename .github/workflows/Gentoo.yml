@@ -1,48 +1,40 @@
-name: Compile Firefox for Gentoo
+name: Build Gentoo Binary
 on: [workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: gentoo/stage3:amd64-openrc
-      options: --user root
     steps:
-      - name: Update Portage and Sync
-        run: |
-          # Use webrsync to save time/bandwidth on the runner
-          emerge-webrsync
-          mkdir -p /etc/portage/package.use
-          
-      - name: Set Custom USE Flags
-        run: |
-          # Fix the "REQUIRED_USE" and dependency conflicts
-          echo "www-client/firefox wayland dbus -X -telemetry -cups -pulseaudio -sndio lto pgo" > /etc/portage/package.use/firefox
-          echo "media-libs/libvpx postproc" >> /etc/portage/package.use/firefox
-          echo "media-libs/mesa wayland" >> /etc/portage/package.use/firefox
-          echo "media-libs/freetype harfbuzz" >> /etc/portage/package.use/firefox
-          echo "media-libs/libglvnd X" >> /etc/portage/package.use/firefox
-          echo "x11-libs/gtk+ wayland -X" >> /etc/portage/package.use/firefox
-          echo "media-libs/libepoxy -X" >> /etc/portage/package.use/firefox
-          
-      - name: Configure Make Options
-        run: |
-          # Optimize for the GitHub Runner (2 cores)
-          echo 'MAKEOPTS="-j2"' >> /etc/portage/make.conf
-          # Tell Portage to create a .gpkg file when finished
-          echo 'FEATURES="buildpkg"' >> /etc/portage/make.conf
-          # Using generic flags to ensure it runs on your laptop CPU
-          echo 'COMMON_FLAGS="-O2 -pipe"' >> /etc/portage/make.conf
-          # Accept testing keywords for the latest Firefox
-          echo 'ACCEPT_KEYWORDS="~amd64"' >> /etc/portage/make.conf
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install Build Dependencies & Compile
+      - name: Run Gentoo Build
         run: |
-          # This is the "Big Grind" (approx 2-4 hours)
-          emerge --verbose www-client/firefox
+          docker run --privileged --name gentoo-builder -d gentoo/stage3:amd64-nomultilib tail -f /dev/null
+          
+          # Setup make.conf with YOUR flags
+          docker exec gentoo-builder bash -c 'cat > /etc/portage/make.conf << EOF
+          COMMON_FLAGS="-O2 -march=x86-64 -pipe"
+          CFLAGS="${COMMON_FLAGS}"
+          CXXFLAGS="${COMMON_FLAGS}"
+          MAKEOPTS="-j$(nproc)"
+          USE="wayland elogind dbus vulkan intel -systemd -bluetooth -wifi -cdrom -floppy -dvd -ipod -smartcard -kvm -kde -gnome -plasma -aqua -qt5 -qt6 -X -accessibility -branding"
+          VIDEO_CARDS="intel i965"
+          ACCEPT_LICENSE="*"
+          PKGDIR="/packages"
+          EOF'
 
-      - name: Upload Binary Package as Artifact
+          # Sync and build (This is the long part)
+          docker exec gentoo-builder emaint sync -r gentoo
+          docker exec gentoo-builder mkdir -p /packages
+          docker exec gentoo-builder emerge --verbose --buildpkg --onlydeps www-client/epiphany
+          docker exec gentoo-builder emerge --verbose --buildpkg www-client/epiphany
+
+          # Extract the binary package
+          docker cp gentoo-builder:/packages .
+
+      - name: Upload Binary Package
         uses: actions/upload-artifact@v4
         with:
-          name: firefox-gentoo-binpkg
-          path: /var/cache/binpkgs/www-client/firefox-*.gpk g
+          name: epiphany-gentoo-binary
+          path: packages/
