@@ -10,22 +10,27 @@ jobs:
 
       - name: Run Gentoo Build
         run: |
+          # Start the container
           docker run --privileged --name gentoo-builder -d gentoo/stage3:amd64-nomultilib tail -f /dev/null
           
-          # Setup make.conf with YOUR flags
+          # Setup make.conf with YOUR EXACT FLAGS from the photo
           docker exec gentoo-builder bash -c 'cat > /etc/portage/make.conf << EOF
-          COMMON_FLAGS="-O2 -march=x86-64 -pipe"
-          CFLAGS="${COMMON_FLAGS}"
-          CXXFLAGS="${COMMON_FLAGS}"
-          MAKEOPTS="-j$(nproc)"
-          USE="wayland elogind dbus vulkan intel -systemd -bluetooth -wifi -cdrom -floppy -dvd -ipod -smartcard -kvm -kde -gnome -plasma -aqua -qt5 -qt6 -X -accessibility -branding"
+          COMMON_FLAGS="-O2 -march=native -pipe"
+          CFLAGS="\${COMMON_FLAGS}"
+          CXXFLAGS="\${COMMON_FLAGS}"
+          MAKEOPTS="-j3"
+          USE="wayland elogind dbus vulkan intel -systemd -bluetooth -wifi -cdrom -floppy -dvd -dvdr -cups -kde -gnome -plasma -aqua -qt5 -qt6 -X -accessibility -branding -ipod -smartcard -kvm"
           VIDEO_CARDS="intel i965"
+          INPUT_DEVICES="libinput"
           ACCEPT_LICENSE="*"
           PKGDIR="/packages"
           EOF'
 
-          # Sync and build (This is the long part)
-          docker exec gentoo-builder emaint sync -r gentoo
+          # Faster, more reliable sync for GitHub Actions
+          docker exec gentoo-builder mkdir -p /var/db/repos/gentoo
+          docker exec gentoo-builder emerge-webrsync
+
+          # Build dependencies first, then the browser
           docker exec gentoo-builder mkdir -p /packages
           docker exec gentoo-builder emerge --verbose --buildpkg --onlydeps www-client/epiphany
           docker exec gentoo-builder emerge --verbose --buildpkg www-client/epiphany
@@ -37,4 +42,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: epiphany-gentoo-binary
-          path: packages/
+          path: packa ges/
