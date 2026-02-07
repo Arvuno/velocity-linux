@@ -15,7 +15,6 @@ jobs:
 
       - name: Configure Portage
         run: |
-          # Use HEREDOC for make.conf
           docker exec gentoo-builder bash -c "cat > /etc/portage/make.conf" << 'EOF'
           COMMON_FLAGS="-O2 -march=x86-64 -pipe"
           CFLAGS="${COMMON_FLAGS}"
@@ -24,28 +23,30 @@ jobs:
           USE="wayland elogind dbus vulkan intel -systemd -bluetooth -wifi -cdrom -floppy -dvd -dvdr -cups -kde -gnome -plasma -aqua -qt5 -qt6 -X -accessibility -branding -ipod -smartcard -kvm"
           VIDEO_CARDS="intel i965"
           ACCEPT_LICENSE="*"
+          ACCEPT_KEYWORDS="~amd64"
           PKGDIR="/packages"
           EOF
 
-          # Setup Package USE flags to satisfy the "REQUIRED_USE" and dependency errors
+          # Setup Package USE flags
           docker exec gentoo-builder mkdir -p /etc/portage/package.use
           docker exec gentoo-builder bash -c 'echo "media-libs/harfbuzz icu" >> /etc/portage/package.use/epiphany'
           docker exec gentoo-builder bash -c 'echo "dev-libs/libxml2 icu" >> /etc/portage/package.use/epiphany'
           docker exec gentoo-builder bash -c 'echo "app-crypt/gcr gtk" >> /etc/portage/package.use/epiphany'
           docker exec gentoo-builder bash -c 'echo "dev-libs/libportal gtk" >> /etc/portage/package.use/epiphany'
-          
-          # Force WebKit to see Wayland (this fixes your 'unmet requirements' error)
           docker exec gentoo-builder bash -c 'echo "net-libs/webkit-gtk wayland jumbo-build" >> /etc/portage/package.use/epiphany'
+          docker exec gentoo-builder bash -c 'echo "x11-libs/cairo glib svg" >> /etc/portage/package.use/epiphany'
 
       - name: Sync and Build
         run: |
           docker exec gentoo-builder emerge-webrsync
           docker exec gentoo-builder mkdir -p /packages
           
-          # Use --autounmask-write just in case any other small deps complain
+          # Force accept keywords for the dependencies that were masked
           docker exec gentoo-builder emerge --verbose --buildpkg --onlydeps --autounmask-write=y www-client/epiphany || true
+          # Run it again to apply the autounmask changes
+          docker exec gentoo-builder emerge --verbose --buildpkg --onlydeps www-client/epiphany
           
-          # Final build command
+          # The Final Boss Build
           docker exec gentoo-builder emerge --verbose --buildpkg www-client/epiphany
 
       - name: Prepare Artifacts
