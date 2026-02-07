@@ -1,19 +1,9 @@
-name: Build Gentoo Binary
-on: [workflow_dispatch]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Run Gentoo Build
         run: |
           # Start the container
           docker run --privileged --name gentoo-builder -d gentoo/stage3:amd64-nomultilib tail -f /dev/null
           
-          # Setup make.conf with YOUR EXACT FLAGS from the photo
+          # Setup make.conf with YOUR EXACT FLAGS
           docker exec gentoo-builder bash -c 'cat > /etc/portage/make.conf << EOF
           COMMON_FLAGS="-O2 -march=native -pipe"
           CFLAGS="\${COMMON_FLAGS}"
@@ -26,20 +16,19 @@ jobs:
           PKGDIR="/packages"
           EOF'
 
-          # Faster, more reliable sync for GitHub Actions
+          # FIX: Enable ICU for Harfbuzz and other required dependencies
+          docker exec gentoo-builder mkdir -p /etc/portage/package.use
+          docker exec gentoo-builder bash -c 'echo "media-libs/harfbuzz icu" >> /etc/portage/package.use/epiphany'
+          docker exec gentoo-builder bash -c 'echo "dev-libs/libxml2 icu" >> /etc/portage/package.use/epiphany'
+
+          # Sync using the reliable snapshot method
           docker exec gentoo-builder mkdir -p /var/db/repos/gentoo
           docker exec gentoo-builder emerge-webrsync
 
-          # Build dependencies first, then the browser
+          # Build
           docker exec gentoo-builder mkdir -p /packages
           docker exec gentoo-builder emerge --verbose --buildpkg --onlydeps www-client/epiphany
           docker exec gentoo-builder emerge --verbose --buildpkg www-client/epiphany
 
           # Extract the binary package
           docker cp gentoo-builder:/packages .
-
-      - name: Upload Binary Package
-        uses: actions/upload-artifact@v4
-        with:
-          name: epiphany-gentoo-binary
-          path: packa ges/
