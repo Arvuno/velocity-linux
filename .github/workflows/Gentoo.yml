@@ -1,34 +1,56 @@
-      - name: Run Gentoo Build
+name: Build Gentoo Epiphany
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Gentoo Container
         run: |
-          # Start the container
           docker run --privileged --name gentoo-builder -d gentoo/stage3:amd64-nomultilib tail -f /dev/null
-          
-          # Setup make.conf with YOUR EXACT FLAGS
-          docker exec gentoo-builder bash -c 'cat > /etc/portage/make.conf << EOF
-          COMMON_FLAGS="-O2 -march=native -pipe"
-          CFLAGS="\${COMMON_FLAGS}"
-          CXXFLAGS="\${COMMON_FLAGS}"
-          MAKEOPTS="-j3"
+          # Wait a few seconds for it to settle
+          sleep 5
+
+      - name: Configure Portage
+        run: |
+          # Use HEREDOC for make.conf to avoid escaping hell
+          docker exec gentoo-builder bash -c "cat > /etc/portage/make.conf" << 'EOF'
+          COMMON_FLAGS="-O2 -march=x86-64 -pipe"
+          CFLAGS="${COMMON_FLAGS}"
+          CXXFLAGS="${COMMON_FLAGS}"
+          MAKEOPTS="-j2"
           USE="wayland elogind dbus vulkan intel -systemd -bluetooth -wifi -cdrom -floppy -dvd -dvdr -cups -kde -gnome -plasma -aqua -qt5 -qt6 -X -accessibility -branding -ipod -smartcard -kvm"
           VIDEO_CARDS="intel i965"
-          INPUT_DEVICES="libinput"
           ACCEPT_LICENSE="*"
           PKGDIR="/packages"
-          EOF'
+          EOF
 
-          # FIX: Enable ICU for Harfbuzz and other required dependencies
+          # Setup Package USE flags (Crucial for WebKit/Harfbuzz)
           docker exec gentoo-builder mkdir -p /etc/portage/package.use
           docker exec gentoo-builder bash -c 'echo "media-libs/harfbuzz icu" >> /etc/portage/package.use/epiphany'
           docker exec gentoo-builder bash -c 'echo "dev-libs/libxml2 icu" >> /etc/portage/package.use/epiphany'
+          docker exec gentoo-builder bash -c 'echo "net-libs/webkit-gtk jumbo-build" >> /etc/portage/package.use/epiphany'
 
-          # Sync using the reliable snapshot method
-          docker exec gentoo-builder mkdir -p /var/db/repos/gentoo
+      - name: Sync and Build
+        run: |
+          # Snapshot sync is faster and more reliable in CI
           docker exec gentoo-builder emerge-webrsync
-
-          # Build
           docker exec gentoo-builder mkdir -p /packages
+          
+          # Build dependencies first, then the app
           docker exec gentoo-builder emerge --verbose --buildpkg --onlydeps www-client/epiphany
           docker exec gentoo-builder emerge --verbose --buildpkg www-client/epiphany
 
-          # Extract the binary package
-          docker cp gentoo-builder:/packages .
+      - name: Prepare Artifacts
+        run: |
+          # Copy the compiled packages from the container to the runner's workspace
+          docker cp gentoo-builder:/packages ./local_packages
+
+      - name: Upload Binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: epiphany-binpkg
+          path: ./local_pack ages/
