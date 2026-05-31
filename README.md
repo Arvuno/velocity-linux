@@ -1,3 +1,4 @@
+[![CI](https://github.com/Arvuno/velocity-linux/actions/workflows/ci.yml/badge.svg)](https://github.com/Arvuno/velocity-linux/actions)
 ### Velocity: Fast and lightweight linux distro based on arch linux
 
 ![pic1](pic1.png)
