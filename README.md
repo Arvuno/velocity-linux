@@ -20,4 +20,30 @@ If you like my work, consider starring my repository. It keeps me motivated to c
 
 If you want to contribute to the building of velocity linux, you can email me at [this link](mailto:colmehurze@gmail.com). 
 
+## Building from source
 
+Velocity is built on top of [archiso](https://wiki.archlinux.org/title/Archiso), the official tool for creating Arch Linux live ISO images. The build pipeline relies on the `releng/` profile in this repository and the tooling installed by the project's CI scripts.
+
+**Prerequisite:** Install `archiso` on your host (Arch-based system required):
+
+```bash
+sudo pacman -S --needed archiso
+```
+
+**Option 1 — Build with Docker (recommended, reproducible):**
+
+```bash
+docker build -t velocity-linux .
+docker run --rm -v "$(pwd)/out":/build/out velocity-linux
+```
+
+**Option 2 — Build locally using the provided GitHub runner scripts:**
+
+The repo ships two helper scripts that mirror the CI pipeline. Run them in order from the repository root:
+
+```bash
+sudo ./installdeps-gh-runner.sh   # installs pacman packages, builds AUR deps, and stages them into releng/airootfs/packages/
+sudo ./buildiso-gh-runner.sh      # runs mkarchiso against releng/ to produce the final ISO
+```
+
+`buildiso-gh-runner.sh` invokes `mkarchiso -v /workspace/releng` and produces the live ISO you can flash with `dd`, `balenaEtcher`, or similar.
